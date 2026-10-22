@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artisan · Chat</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e6e7e5;background:#101916;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,textarea{font:inherit}button{cursor:pointer}header{height:80px;border-bottom:1px solid #ffffff0d;display:flex;align-items:center;justify-content:space-between;padding:0 36px}.brand{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600;letter-spacing:-.5px}.mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #829c74;border-radius:10px;color:#83bda4;font-family:Georgia,serif;font-size:23px}.status{display:flex;align-items:center;gap:8px;font-size:12px;color:#95aaa0}.dot{width:6px;height:6px;border-radius:50%;background:#476459}.status.on .dot{background:#65c798;box-shadow:0 0 12px #65c79844}.shell{max-width:820px;margin:auto;height:calc(100dvh - 80px);display:flex;flex-direction:column;padding:0 24px}main{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2c5040 transparent;padding:30px 0}.welcome{height:100%;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:24px}.eyebrow{font-size:11px;letter-spacing:2px;color:#87967e;margin-bottom:19px}h1{font-size:38px;letter-spacing:-1.6px;font-weight:500;margin:0 0 14px}.welcome p{font-size:14px;color:#96aaa0;margin:0;line-height:1.7}.message{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:0 0 28px;animation:appear .18s ease}.message.user{align-items:flex-end}.who{font-size:10px;letter-spacing:1.3px;color:#8bad9b;padding:0 3px}.bubble{max-width:90%;font-size:14px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}.user .bubble{background:#123524;border:1px solid #2d6047;border-radius:16px 16px 4px 16px;padding:13px 18px;color:#e0eee6}.assistant .bubble{padding:0 3px}.notice{font-size:12px;color:#a0d0b7;margin:0 0 24px;padding:11px 14px;border-left:2px solid #3c946a;background:#112c20;border-radius:0 6px 6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{color:#e8b7a7;border-color:#af7661;background:#251e1b}.composer{padding:12px 0 20px;flex-shrink:0}.inputbox{background:#15271e;border:1px solid #315841;border-radius:16px;padding:17px 16px 12px;box-shadow:0 6px 30px #0002}.inputbox:focus-within{border-color:#4c9873}textarea{display:block;width:100%;min-height:54px;max-height:160px;resize:none;background:transparent;color:#e6e7e5;border:0;outline:0;line-height:1.6;font-size:14px;padding:0}textarea::placeholder{color:#89a293}.toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.command{background:transparent;border:0;color:#97b5a4;font-size:12px;padding:6px 0}.command:hover{color:#bce5cf}.send{border:0;background:#246b49;color:#f1faf5;border-radius:9px;width:34px;height:34px;font-size:21px;display:grid;place-items:center}.send:hover{background:#318559}.send:disabled{opacity:.4;cursor:default}.foot{text-align:center;font-size:10px;color:#819b8c;margin-top:13px;letter-spacing:.2px}.typing{color:#97b5a4;font-size:12px;padding:0 3px 20px}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@media(max-width:600px){header{padding:0 20px;height:68px}.shell{height:calc(100dvh - 68px);padding:0 18px}h1{font-size:30px}.status{font-size:10px}.foot{font-size:9px}.bubble{max-width:96%}}
+.wordmark{color:#83bda4;margin:0 0 26px;width:min(316px,78%);line-height:0}.wordmark svg{display:block;width:100%;height:auto}.brand{color:#83bda4;flex-shrink:0}.brand svg{display:block;width:87px;height:auto}@media(max-width:600px){.brand svg{width:66px}.wordmark{width:min(264px,78%)}}
+.new-chat{background:#123524;border:1px solid #2d6047;border-radius:8px;color:#b3d7c3;padding:8px 12px;font-size:12px}.new-chat:hover{background:#1a4832}.new-chat:disabled{opacity:.4;cursor:default}@media(max-width:600px){header>div:last-child{gap:10px!important}.new-chat{padding:7px;font-size:11px}.status span:last-child{max-width:90px}}
+/* Phthalo Green anchors surfaces; lighter tints keep text legible. */
+:root{--phthalo-green:#123524}
+
+button:focus-visible{outline:2px solid #83bda4;outline-offset:4px}
+.send{box-shadow:0 0 0 1px #418c65 inset}
+/* Soft green light fades into a quiet, dark reading surface. */
+body{min-height:100dvh;background-color:#0c1512;background-image:radial-gradient(ellipse 75% 80% at 0% 100%,rgba(24,100,69,.58) 0%,rgba(18,53,36,.26) 45%,transparent 75%),radial-gradient(ellipse 65% 65% at 100% 5%,rgba(32,91,79,.40) 0%,rgba(20,61,48,.18) 48%,transparent 78%),linear-gradient(145deg,#101916 0%,#0c1512 48%,#10251b 100%);background-attachment:fixed}
+header{background:rgba(12,21,18,.35)}
+.inputbox{background:rgba(20,39,29,.88);box-shadow:0 12px 40px rgba(0,0,0,.18)}
+
+.inputbox{position:relative}
+.command-hint{font-size:11px;color:#89a293}
+.command-menu{position:absolute;bottom:calc(100% + 10px);left:0;width:min(430px,100%);padding:7px;border:1px solid #315841;border-radius:12px;background:#15251d;box-shadow:0 12px 36px #0006;z-index:10}
+.command-menu[hidden]{display:none}
+.menu-title{padding:8px 10px;color:#89a293;font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.command-option{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:12px 10px;border:0;border-radius:7px;background:transparent;color:#e0eee6;gap:12px}
+.command-option[aria-selected="true"],.command-option:hover{background:#234333}
+.command-option:disabled{opacity:.45;cursor:default}
+.command-option strong{display:block;font-size:13px;font-weight:500}
+.command-option small{display:block;margin-top:5px;color:#97b5a4;font-size:11px}
+.command-option .key{font-size:10px;color:#89a293}
+.menu-empty{font-size:12px;color:#97b5a4;padding:14px 10px}
+
+/* Native macOS notch presentation; normal browser layout stays the same. */
+body.island{--island-header-height:max(42px,calc(var(--notch-inset,0px) + 8px));min-height:0;height:100dvh;overflow:hidden;background-color:#08110c}
+body.island header{height:var(--island-header-height);padding:4px 18px 0;background:transparent;border:0;justify-content:space-between}
+body.island .brand,body.island .welcome,body.island .status,body.island .foot,body.island .who{display:none}
+body.island header>div:last-child{gap:8px!important}
+body.island .island-nav{display:flex;align-items:center;gap:5px}
+body.island .shell{max-width:none;height:calc(100dvh - var(--island-header-height) - 10px);margin:0 10px 10px;padding:0 12px;border:1px solid #86bd9e12;border-radius:16px;background:radial-gradient(ellipse 85% 100% at 50% 115%,#1c634044,transparent 75%),linear-gradient(160deg,#111e18dd,#0d1914e8);box-shadow:inset 0 1px 0 #ffffff03}
+body.island main{padding:12px 2px 6px;min-height:0;scrollbar-width:thin}
+body.island .composer{padding:6px 0 12px}
+body.island .inputbox{display:grid;grid-template-columns:minmax(0,1fr) 28px;align-items:end;gap:10px;border-radius:12px;padding:8px 10px;background:#accfb512;border:1px solid #96c6a915;box-shadow:none}
+body.island .inputbox:focus-within{border-color:#70ac895c;background:#b0d8bb16}
+body.island textarea{min-height:24px;font-size:13px;line-height:24px;max-height:160px}
+body.island .toolbar{margin:0}
+body.island .command-hint{display:none}
+body.island .send{width:28px;height:28px;border-radius:50%;background:#9ecdb0;color:#0c2517;font-size:18px;box-shadow:none}
+body.island .send:hover{background:#b8e1c7}
+body.island .message{margin-bottom:8px;gap:0}
+body.island .message:last-child{margin-bottom:0}
+body.island .bubble{font-size:13px;line-height:1.6;max-width:90%}
+body.island .user .bubble{padding:8px 12px;border-radius:12px 12px 4px 12px;background:#24503980;border:1px solid #7fbb9824}
+body.island .assistant .bubble{padding:8px 12px;border-radius:12px 12px 12px 4px;background:#ffffff05}
+body.island .typing{padding:8px 12px;font-size:12px}
+body.island .notice{margin:0 0 8px;font-size:12px}
+body.island .command-menu{max-height:220px;overflow-y:auto;width:100%;border-radius:12px}
+body.island .command-option{padding:10px}
+.island-quit{display:none}
+body.island .new-chat,body.island .island-quit,body.island .island-control{display:inline-flex;align-items:center;justify-content:center;width:30px;height:26px;padding:0;border:0;border-radius:13px;background:transparent;color:#97b5a4;font-size:20px;font-weight:300}
+body.island .island-control.active{background:#a5d1b51a;color:#d9efe1}
+body.island .new-chat:hover,body.island .island-quit:hover,body.island .island-control:hover{background:#ffffff0d;color:#e0eee6}
+body.island header button svg{width:14px;height:14px;display:block}
+body.island header,body.island .shell{opacity:0;transition:opacity .16s ease-in}
+body.island .shell{transform:scale(.97);transform-origin:top center;transition:opacity .16s ease-in,transform .16s ease-in}
+body.island.island-content-visible header,body.island.island-content-visible .shell{opacity:1;transform:scale(1);transition:opacity .22s ease-out,transform .3s cubic-bezier(.2,.8,.2,1)}
+body.island-collapsed{visibility:hidden}
+@media(prefers-reduced-motion:reduce){body.island header,body.island .shell{transition:none!important;transform:none!important}}
+</style>
+<script>
+if(new URLSearchParams(location.search).has('island')){
+ document.documentElement.style.setProperty('--notch-inset',Math.max(0,Math.min(100,Number(new URLSearchParams(location.search).get('inset'))||0))+'px');
+ document.addEventListener('DOMContentLoaded',()=>document.body.classList.add('island','island-collapsed'));
+}
+</script>
+</head>
+<body>
+<header><div class="brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 316 124" role="img" aria-label="Artisan"><g fill="currentColor" fill-rule="evenodd"><path transform="translate(0)" d="M0 124V10L10 0H32L42 10V124H26V74H16V124ZM16 16V60H26V16Z"/>
+<path transform="translate(50)" d="M0 124V0H32L42 10V58L34 66L42 74V124H26V76L22 72H16V124ZM16 16V56H26V16Z"/>
+<path transform="translate(100)" d="M0 0H42V16H29V124H13V16H0Z"/>
+<path transform="translate(150)" d="M0 0H16V124H0Z"/>
+<path transform="translate(174)" d="M10 0H32L42 10V32H26V16H16V52H32L42 62V114L32 124H10L0 114V92H16V108H26V68H10L0 58V10Z"/>
+<path transform="translate(224)" d="M0 124V10L10 0H32L42 10V124H26V74H16V124ZM16 16V60H26V16Z"/>
+<path transform="translate(274)" d="M0 124V0H32L42 10V124H26V16H16V124Z"/></g></svg></div><div style="display:flex;align-items:center;gap:20px"><button type="button" id="newChat" class="new-chat">+ New chat</button><button type="button" id="quitIsland" class="island-quit" aria-label="Quit notch mode" title="Quit notch mode">×</button><div id="status" class="status"><span class="dot"></span><span id="statusText">Speculative decoding off</span></div></div></header>
+<div class="shell"><main id="conversation" aria-label="Conversation" aria-live="polite"><div class="welcome" id="welcome"><h1 class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 316 124" role="img" aria-label="Artisan"><g fill="currentColor" fill-rule="evenodd"><path transform="translate(0)" d="M0 124V10L10 0H32L42 10V124H26V74H16V124ZM16 16V60H26V16Z"/>
+<path transform="translate(50)" d="M0 124V0H32L42 10V58L34 66L42 74V124H26V76L22 72H16V124ZM16 16V56H26V16Z"/>
+<path transform="translate(100)" d="M0 0H42V16H29V124H13V16H0Z"/>
+<path transform="translate(150)" d="M0 0H16V124H0Z"/>
+<path transform="translate(174)" d="M10 0H32L42 10V32H26V16H16V52H32L42 62V114L32 124H10L0 114V92H16V108H26V68H10L0 58V10Z"/>
+<path transform="translate(224)" d="M0 124V10L10 0H32L42 10V124H26V74H16V124ZM16 16V60H26V16Z"/>
+<path transform="translate(274)" d="M0 124V0H32L42 10V124H26V16H16V124Z"/></g></svg></h1><p>Send a message to your model.</p></div></main>
+<form class="composer" id="form"><div class="inputbox"><div id="commandMenu" class="command-menu" role="listbox" aria-label="Commands" hidden></div><textarea id="input" aria-controls="commandMenu" aria-expanded="false" aria-autocomplete="list" rows="2" aria-label="Message" placeholder="Message Artisan…"></textarea><div class="toolbar"><span class="command-hint">Type / for commands</span><button class="send" id="send" aria-label="Send message">↑</button></div></div><div class="foot">Enter to send · Shift + Enter for a new line · Runs on your machine</div></form></div>
+<script>
+const isIsland=new URLSearchParams(location.search).has('island');
+const input=document.querySelector('#input'),main=document.querySelector('main'),send=document.querySelector('#send');let busy=false,enabled=false;const welcomeTemplate=document.querySelector('#welcome').cloneNode(true);
+function status(on){enabled=on;document.querySelector('#status').classList.toggle('on',on);document.querySelector('#statusText').textContent='Speculative decoding '+(on?'on':'off')}
+function clearWelcome(){document.querySelector('#welcome')?.remove()}
+function scroll(){main.scrollTop=main.scrollHeight}
+function message(role,text){clearWelcome();const row=document.createElement('div');row.className='message '+role;const label=document.createElement('div');label.className='who';label.textContent=role==='user'?'YOU':'ARTISAN';const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;row.append(label,bubble);main.append(row);scroll();return row}
+function notice(text,error=false){clearWelcome();const row=document.createElement('div');row.className='notice'+(error?' error':'');row.textContent=text;main.append(row);scroll()}
+const menu=document.querySelector('#commandMenu');let selected=0,visibleCommands=[];
+const commands=[
+ {name:'Enable speculative decoding',description:'Use speculative decoding for the next generation',command:'/speculative decoding',on:true},
+ {name:'Disable speculative decoding',description:'Return to standard decoding',command:'/speculative decoding off',on:false}
+];
+function closeMenu(){menu.hidden=true;input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant')}
+function renderMenu(){
+ const text=input.value.trimStart();if(busy||!text.startsWith('/')||text.includes('\n')){closeMenu();return}
+ const query=text.slice(1).trim().toLowerCase();
+ visibleCommands=commands.filter(c=>(c.name+' '+c.command).toLowerCase().includes(query));
+ selected=Math.max(0,Math.min(selected,visibleCommands.length-1));
+ menu.replaceChildren();const title=document.createElement('div');title.className='menu-title';title.textContent='Commands';menu.append(title);
+ visibleCommands.forEach((c,i)=>{
+  const button=document.createElement('button');button.type='button';button.className='command-option';button.id='slash-option-'+i;button.setAttribute('role','option');button.setAttribute('aria-selected',String(i===selected));
+  const copy=document.createElement('span'),name=document.createElement('strong'),description=document.createElement('small'),key=document.createElement('span');
+  name.textContent=c.name;description.textContent=c.description;copy.append(name,description);key.className='key';key.textContent=!isIsland&&enabled===c.on?'Current':'↵';button.append(copy,key);
+  button.onmousedown=e=>e.preventDefault();button.onclick=()=>chooseCommand(c);menu.append(button);
+ });
+ if(!visibleCommands.length){const empty=document.createElement('div');empty.className='menu-empty';empty.textContent='No matching commands';menu.append(empty)}
+ menu.hidden=false;input.setAttribute('aria-expanded','true');if(visibleCommands.length)input.setAttribute('aria-activedescendant','slash-option-'+selected);else input.removeAttribute('aria-activedescendant');
+}
+function chooseCommand(command){if(busy)return;input.value='';input.style.height='auto';closeMenu();submit(command.command,true)}
+input.addEventListener('input',()=>{selected=0;input.style.height='auto';input.style.height=Math.min(input.scrollHeight,160)+'px';renderMenu()});
+input.addEventListener('keydown',e=>{
+ if(e.isComposing)return;
+ if(!menu.hidden){
+  if(e.key==='Escape'){e.preventDefault();closeMenu();return}
+  if((e.key==='ArrowDown'||e.key==='ArrowUp')&&visibleCommands.length){e.preventDefault();selected=(selected+(e.key==='ArrowDown'?1:-1)+visibleCommands.length)%visibleCommands.length;renderMenu();return}
+  if((e.key==='Enter'&&!e.shiftKey)||e.key==='Tab'){if(visibleCommands.length){e.preventDefault();chooseCommand(visibleCommands[selected]);return}if(e.key==='Enter'){e.preventDefault();return}}
+ }
+ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.querySelector('#form').requestSubmit()}
+});
+document.addEventListener('pointerdown',e=>{if(!menu.contains(e.target)&&e.target!==input)closeMenu()});
+async function submit(text,isCommand=false){if(!text||busy)return;busy=true;send.disabled=true;document.querySelector('#newChat').disabled=true;closeMenu();if(!isCommand){input.value='';input.style.height='auto'}if(!text.startsWith('/'))message('user',text);const pending=document.createElement('div');pending.className='typing';pending.textContent=text.startsWith('/')?'Updating setting…':'Processing…';main.append(pending);scroll();try{const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});const data=await r.json();pending.remove();if(!r.ok)throw new Error(data.error||'Request failed');status(data.specdecode);if(data.kind==='notice'){if(!isIsland)notice(data.text)}else message('assistant',data.text)}catch(error){pending.remove();notice(error.message,true);if(!isCommand)input.value=text}finally{busy=false;send.disabled=false;document.querySelector('#newChat').disabled=false;input.focus()}}
+document.querySelector('#form').addEventListener('submit',e=>{e.preventDefault();if(!menu.hidden){if(visibleCommands.length)chooseCommand(visibleCommands[selected]);return}submit(input.value.trim())});
+
+
+document.querySelector('#newChat').onclick=async()=>{if(busy)return;busy=true;send.disabled=true;document.querySelector('#newChat').disabled=true;closeMenu();try{const r=await fetch('/new-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const data=await r.json();if(!r.ok)throw new Error(data.error||'Could not start a new chat');main.replaceChildren(welcomeTemplate.cloneNode(true));input.value='';input.style.height='auto';status(data.specdecode)}catch(e){notice(e.message,true)}finally{busy=false;send.disabled=false;document.querySelector('#newChat').disabled=false;input.focus()}};
+async function init(){send.disabled=true;try{const r=await fetch('/state');if(!r.ok)throw new Error('Could not load chat');const data=await r.json();status(data.specdecode);data.messages.forEach(m=>message(m.role==='user'?'user':'assistant',m.content))}catch(e){notice('Unable to connect to the local chat server. Reload to try again.',true)}finally{send.disabled=false;input.focus()}}init();
+
+if(new URLSearchParams(location.search).has('island')){
+ input.placeholder='Message…  / for commands';input.rows=1;
+ input.setAttribute('aria-description','Type / for commands. Enter to send; Shift + Enter for a new line.');
+ const newChat=document.querySelector('#newChat');newChat.textContent='+';newChat.setAttribute('aria-label','New chat');newChat.title='New chat';
+ const icon=path=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+path+'</svg>';
+ const nav=document.createElement('div');nav.className='island-nav';
+ const focusChat=document.createElement('button');focusChat.type='button';focusChat.className='island-control active';focusChat.setAttribute('aria-label','Focus chat');focusChat.title='Chat';focusChat.innerHTML=icon('<path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 3V6a2 2 0 0 1 2-2Z"/>');focusChat.onclick=()=>input.focus();
+ nav.append(focusChat,newChat);document.querySelector('header').prepend(nav);
+ const quit=document.querySelector('#quitIsland');quit.innerHTML=icon('<path d="M12 3v9M6.3 5.8a8 8 0 1 0 11.4 0"/>');
+ quit.onclick=()=>window.webkit?.messageHandlers?.island?.postMessage({action:'quit'});
+ const collapse=document.createElement('button');collapse.type='button';collapse.className='island-control';collapse.setAttribute('aria-label','Hide chat');collapse.title='Hide chat';collapse.innerHTML=icon('<path d="m6 14 6-6 6 6"/>');collapse.onclick=()=>window.webkit?.messageHandlers?.island?.postMessage({action:'collapse'});quit.before(collapse);
+ let revealTimer;
+ window.setIslandOpen=open=>{
+  clearTimeout(revealTimer);
+  if(open){
+   document.body.classList.remove('island-collapsed');
+   const reveal=()=>document.body.classList.add('island-content-visible');
+   if(matchMedia('(prefers-reduced-motion: reduce)').matches)reveal();
+   else revealTimer=setTimeout(reveal,160);
+   window.reportIsland?.();
+  }else document.body.classList.remove('island-content-visible');
+ };
+ let scheduled=false,lastReport='';
+ window.reportIsland=()=>{
+  if(scheduled)return;scheduled=true;
+  requestAnimationFrame(()=>{
+   scheduled=false;
+   if(document.body.classList.contains('island-collapsed'))return;
+   const content=Array.from(main.children).reduce((height,child)=>{const css=getComputedStyle(child);if(css.display==='none')return height;return height+child.offsetHeight+parseFloat(css.marginTop||0)+parseFloat(css.marginBottom||0)},0);
+   const mainStyle=getComputedStyle(main),cardStyle=getComputedStyle(document.querySelector('.shell'));
+   const vertical=style=>parseFloat(style.paddingTop||0)+parseFloat(style.paddingBottom||0)+parseFloat(style.borderTopWidth||0)+parseFloat(style.borderBottomWidth||0);
+   const messageHeight=content+vertical(mainStyle);
+   const menuHeight=menu.hidden?0:menu.offsetHeight+14;
+   const height=Math.ceil(document.querySelector('header').offsetHeight+document.querySelector('.composer').offsetHeight+Math.max(messageHeight,menuHeight)+vertical(cardStyle)+parseFloat(cardStyle.marginBottom||0));
+   const data={height};
+   const signature=JSON.stringify(data);
+   if(signature!==lastReport){lastReport=signature;window.webkit?.messageHandlers?.island?.postMessage(data)}
+  });
+ };
+ new MutationObserver(window.reportIsland).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','style']});
+ input.addEventListener('input',window.reportIsland);
+ window.addEventListener('resize',window.reportIsland);
+ input.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu.hidden&&!event.defaultPrevented){window.webkit?.messageHandlers?.island?.postMessage({action:'collapse'})}});
+ window.reportIsland();
+}
+</script>
+</body></html>

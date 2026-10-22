@@ -1,0 +1,2 @@
+# No third-party Python dependencies. Python 3.10+ is required.
+# macOS notch mode also requires Apple Xcode Command Line Tools.
